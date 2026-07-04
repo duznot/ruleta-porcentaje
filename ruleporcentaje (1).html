@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RulePorcentaje - CS2 Style Case Gachapon</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Space Grotesk & Outfit for gamer/tech look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#03060E',
+                            card: '#0A0E1A',
+                            border: '#1E294B',
+                            accent: '#6366F1',
+                            gold: '#F59E0B',
+                            purple: '#A855F7',
+                            red: '#EF4444',
+                            blue: '#3B82F6',
+                            green: '#10B981',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: radial-gradient(circle at 50% 30%, #0d122d 0%, #03050a 100%);
+            overflow-x: hidden;
+        }
+        
+        /* Neon Border Glow effects */
+        .neon-border {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15), inset 0 0 15px rgba(99, 102, 241, 0.05);
+        }
+        .neon-glow-btn {
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .neon-glow-btn:hover:not(:disabled) {
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.8);
+            transform: translateY(-2px);
+        }
+
+        /* CS2 Carousel Transition Curve */
+        .cs2-transition {
+            transition: transform 5.5s cubic-bezier(0.08, 0.82, 0.14, 1);
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #03060E;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* CSS Glows for Rarity Tiers */
+        .glow-tier-legendary { box-shadow: 0 0 25px rgba(245, 158, 11, 0.3); }
+        .glow-tier-ancient { box-shadow: 0 0 25px rgba(239, 68, 68, 0.3); }
+        .glow-tier-mythical { box-shadow: 0 0 25px rgba(168, 85, 247, 0.3); }
+        .glow-tier-classified { box-shadow: 0 0 25px rgba(59, 130, 246, 0.3); }
+    </style>
+</head>
+<body class="text-gray-100 min-h-screen pb-16">
+
+    <header class="border-b border-indigo-950/50 bg-brand-dark/95 backdrop-blur-xl sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="relative bg-gradient-to-tr from-indigo-600 to-red-600 p-3 rounded-2xl shadow-lg shadow-indigo-500/20">
+                    <i class="fa-solid fa-gamepad text-2xl text-white animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="font-display text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-400 via-pink-400 to-red-500 bg-clip-text text-transparent">
+                        RulePorcentaje
+                    </h1>
+                    <p class="text-xs text-gray-400">CS2 Case Roller Simulator con Probabilidad de Precisión Ajustable</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-3">
+                <button onclick="toggleSound()" id="sound-toggle" class="px-4 py-2 bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 rounded-xl text-xs font-bold flex items-center gap-2 transition-all">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-indigo-400"></i>
+                    <span id="sound-text">Audio FX: Activo</span>
+                </button>
+                <a href="#instrucciones" class="px-4 py-2 bg-slate-900/60 border border-indigo-950/50 text-indigo-300 rounded-xl text-xs font-bold flex items-center gap-2 hover:bg-indigo-950/20 transition-all">
+                    <i class="fa-solid fa-circle-question"></i> Guía CS2
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 mt-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- SECCIÓN IZQUIERDA: El Simulador de Rodillo de Caja CS2 -->
+            <section class="lg:col-span-7 flex flex-col gap-6">
+                
+                <!-- El Rodillo Horizontal Estilo CS2 -->
+                <div class="relative w-full bg-brand-dark border border-indigo-950 rounded-3xl p-6 flex flex-col items-center overflow-hidden neon-border shadow-2xl">
+                    <div class="absolute inset-0 bg-gradient-to-b from-indigo-950/10 via-transparent to-brand-dark/80 pointer-events-none"></div>
+                    
+                    <!-- Información de Racha/Estado actual -->
+                    <div class="w-full flex justify-between items-center mb-4 z-10">
+                        <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/50 px-3 py-1.5 rounded-lg border border-indigo-900/40">
+                            Estilo: CS2 Case Opening
+                        </span>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
+                            <span class="text-xs text-gray-400" id="case-counter">Historial: 0 Tiradas</span>
+                        </div>
+                    </div>
+
+                    <!-- El Contenedor de la Ruleta Horizontal -->
+                    <div class="relative w-full h-40 bg-slate-950/90 border border-slate-800 rounded-2xl overflow-hidden flex items-center">
+                        
+                        <!-- Línea Indicadora Central (Clásica CS2) -->
+                        <div id="carousel-pointer" class="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-red-500 via-pink-500 to-red-500 z-30 shadow-[0_0_15px_#ef4444]">
+                            <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 w-3 h-3 bg-red-500 rotate-45 rounded-sm"></div>
+                            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1 w-3 h-3 bg-red-500 rotate-45 rounded-sm"></div>
+                        </div>
+
+                        <!-- Sombras degradadas a los lados para dar profundidad al deslizador -->
+                        <div class="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent z-20 pointer-events-none"></div>
+                        <div class="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-slate-950 via-slate-950/80 to-transparent z-20 pointer-events-none"></div>
+
+                        <!-- Cinta de Items Deslizante -->
+                        <div id="carousel-strip" class="absolute flex items-center left-0 h-full cs2-transition" style="transform: translateX(0px); will-change: transform;">
+                            <!-- Los items se inyectarán aquí dinámicamente mediante JS -->
+                            <div class="text-gray-500 text-sm px-10 text-center w-full">Configura palabras y dale a 'Tirar Gachapon' para inicializar...</div>
+                        </div>
+                    </div>
+
+                    <!-- Controles de Lanzamiento -->
+                    <div class="w-full mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 z-10">
+                        <button onclick="spinGachapon()" id="spin-btn" class="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white font-display font-black text-lg py-4 px-6 rounded-2xl neon-glow-btn flex items-center justify-center gap-3 tracking-wide uppercase shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-box-open text-xl animate-bounce"></i>
+                            Tirar Gachapon
+                        </button>
+                        
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="bulkSpin(10)" id="bulk-10-btn" class="bg-slate-950/60 border border-slate-800 hover:bg-slate-900/80 text-gray-300 font-bold py-2 px-3 rounded-xl text-xs flex flex-col justify-center items-center gap-1 transition-all disabled:opacity-50">
+                                <span class="text-indigo-400 font-extrabold text-sm">Abrir x10</span>
+                                <span class="text-[10px] text-gray-500">Tirada Rápida</span>
+                            </button>
+                            <button onclick="bulkSpin(100)" id="bulk-100-btn" class="bg-slate-950/60 border border-slate-800 hover:bg-slate-900/80 text-gray-300 font-bold py-2 px-3 rounded-xl text-xs flex flex-col justify-center items-center gap-1 transition-all disabled:opacity-50">
+                                <span class="text-pink-400 font-extrabold text-sm">Abrir x100</span>
+                                <span class="text-[10px] text-gray-500 font-normal">Super Stats</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estadísticas de Sesión Realista -->
+                <div class="bg-brand-card border border-indigo-950/50 rounded-3xl p-6 neon-border">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-display font-bold text-lg text-indigo-300 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-bar"></i> Historial y Frecuencias Obtenidas
+                        </h3>
+                        <button onclick="resetStats()" class="text-xs text-red-400 hover:text-red-300 transition-colors bg-red-950/30 border border-red-900/40 px-2.5 py-1 rounded-lg">
+                            <i class="fa-solid fa-trash mr-1"></i> Reiniciar Stats
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <div class="bg-slate-950/40 border border-slate-900 p-3 rounded-xl text-center">
+                            <span class="block text-2xl font-black text-indigo-400 font-display" id="stat-total-pulls">0</span>
+                            <span class="text-[10px] uppercase text-gray-400 font-bold">Total Abiertos</span>
+                        </div>
+                        <div class="bg-slate-950/40 border border-slate-900 p-3 rounded-xl text-center">
+                            <span class="block text-2xl font-black text-amber-400 font-display animate-pulse" id="stat-legendary-count">0</span>
+                            <span class="text-[10px] uppercase text-gray-400 font-bold">Legendarios</span>
+                        </div>
+                        <div class="bg-slate-950/40 border border-slate-900 p-3 rounded-xl text-center">
+                            <span class="block text-2xl font-black text-rose-500 font-display" id="stat-ancient-count">0</span>
+                            <span class="text-[10px] uppercase text-gray-400 font-bold">Ancient / Épicos</span>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Frecuencias Reales -->
+                    <div class="space-y-3" id="stats-freq-container">
+                        <p class="text-xs text-gray-400 text-center py-2">No hay estadísticas registradas todavía. ¡Haz tu primera tirada!</p>
+                    </div>
+                </div>
+
+            </section>
+            
+            <!-- SECCIÓN DERECHA: Lista de Palabras, Porcentajes y Recomendaciones -->
+            <section class="lg:col-span-5 flex flex-col gap-6">
+                
+                <!-- Tarjeta de Gestión de Palabras -->
+                <div class="bg-brand-card border border-indigo-950/50 rounded-3xl p-6 neon-border relative">
+                    <h3 class="font-display font-bold text-lg text-gray-100 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-indigo-400"></i> Configurar Recompensas
+                    </h3>
+                    <p class="text-xs text-gray-400 mb-4">
+                        Agrega palabras personalizadas y el porcentaje de probabilidad que deseas asignar. 
+                    </p>
+
+                    <!-- Formulario de Entrada Rápida -->
+                    <div class="space-y-3 mb-6 bg-slate-950/50 border border-indigo-950/40 p-4 rounded-2xl">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">Palabra o Premio</label>
+                            <input type="text" id="input-word" placeholder="Ej: Dragon Lore o Cuchillo" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-600 transition-all">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">Porcentaje (%)</label>
+                                <input type="number" step="any" id="input-percent" placeholder="Ej: 5" min="0.0001" max="100" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-600 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">Rareza (Color)</label>
+                                <select id="input-rarity" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                                    <option value="common" class="text-slate-400">Mil-Spec (Azul Claro)</option>
+                                    <option value="restricted" class="text-blue-400">Restricted (Azul Oscuro)</option>
+                                    <option value="classified" class="text-purple-400">Classified (Violeta)</option>
+                                    <option value="mythical" class="text-pink-400">Covert (Rosa)</option>
+                                    <option value="legendary" class="text-amber-400">Legendario (Oro ★)</option>
+                                    <option value="ancient" class="text-red-500">Ancient (Rojo ★)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button onclick="addWord()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Añadir Palabra
+                        </button>
+                    </div>
+
+                    <!-- Indicador de Suma Total de Probabilidad -->
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center text-xs mb-1.5">
+                            <span class="font-bold text-gray-400">Suma Total de Probabilidad:</span>
+                            <span id="prob-total-text" class="font-display font-bold text-emerald-400">0%</span>
+                        </div>
+                        <!-- Barra visual de porcentaje total -->
+                        <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-800">
+                            <div id="prob-total-bar" class="bg-gradient-to-r from-emerald-500 to-indigo-500 h-full transition-all" style="width: 0%"></div>
+                        </div>
+                        <!-- Botón de normalización rápida -->
+                        <div id="normalize-container" class="mt-2 text-right hidden">
+                            <button onclick="normalizePercentages()" class="text-[10px] text-indigo-400 hover:text-indigo-300 font-bold bg-indigo-950/60 border border-indigo-900/50 px-2 py-1 rounded-md transition-all">
+                                <i class="fa-solid fa-wand-magic"></i> Auto-Ajustar a 100%
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Palabras Registradas -->
+                    <div class="mt-6 border-t border-slate-900 pt-4">
+                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Tus Palabras Configuradas</h4>
+                        <div class="max-h-60 overflow-y-auto space-y-2 pr-1" id="words-list-container">
+                            <!-- Los items de palabras se insertan aquí -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recomendaciones y Ajustes Rápidos pre-diseñados (Gaming) -->
+                <div class="bg-brand-card border border-indigo-950/50 rounded-3xl p-6 neon-border">
+                    <h3 class="font-display font-bold text-md text-indigo-300 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders"></i> Plantillas Recomendadas
+                    </h3>
+                    <p class="text-xs text-gray-400 mb-4">
+                        ¿No sabes qué porcentajes poner? Selecciona una plantilla clásica de juegos famosos para configurar instantáneamente tu ruleta:
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button onclick="loadPreset('csgo')" class="text-left bg-slate-950/60 border border-slate-800 hover:border-indigo-500/50 p-3 rounded-xl transition-all hover:bg-slate-900 group">
+                            <span class="block text-xs font-bold text-gray-200 group-hover:text-indigo-400">Caja CS:GO / CS2 Oficial</span>
+                            <span class="block text-[10px] text-gray-500 mt-1">Súper real: Especial Raro (0.26%), Covert (0.64%), Mil-Spec (79.92%)...</span>
+                        </button>
+                        
+                        <button onclick="loadPreset('gacha')" class="text-left bg-slate-950/60 border border-slate-800 hover:border-indigo-500/50 p-3 rounded-xl transition-all hover:bg-slate-900 group">
+                            <span class="block text-xs font-bold text-gray-200 group-hover:text-indigo-400">Gachapon RPG (F2P)</span>
+                            <span class="block text-[10px] text-gray-500 mt-1">SSR legendario (1.5%), Personajes SR (8.5%), Armas Comunes (90%).</span>
+                        </button>
+
+                        <button onclick="loadPreset('coinflip')" class="text-left bg-slate-950/60 border border-slate-800 hover:border-indigo-500/50 p-3 rounded-xl transition-all hover:bg-slate-900 group">
+                            <span class="block text-xs font-bold text-gray-200 group-hover:text-indigo-400">Lanzamiento 50 / 50</span>
+                            <span class="block text-[10px] text-gray-500 mt-1">Dos palabras con probabilidades idénticas del 50% cada una.</span>
+                        </button>
+
+                        <button onclick="loadPreset('rainbow')" class="text-left bg-slate-950/60 border border-slate-800 hover:border-indigo-500/50 p-3 rounded-xl transition-all hover:bg-slate-900 group">
+                            <span class="block text-xs font-bold text-gray-200 group-hover:text-indigo-400">Ruleta de Decisión Justa</span>
+                            <span class="block text-[10px] text-gray-500 mt-1">4 opciones equilibradas perfectamente a un 25% cada una.</span>
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+        <!-- SECCIÓN DE MANUAL DE INSTRUCCIONES COMPLETAS -->
+        <section id="instrucciones" class="mt-12 bg-slate-950/50 border border-slate-900 rounded-3xl p-8 max-w-7xl mx-auto">
+            <h2 class="font-display font-black text-2xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-6 flex items-center gap-2">
+                <i class="fa-solid fa-book text-indigo-400"></i> Manual de Operación de RulePorcentaje
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-300">
+                <div class="space-y-3">
+                    <div class="bg-indigo-950/30 p-3 rounded-2xl w-12 h-12 flex items-center justify-center border border-indigo-900/40">
+                        <i class="fa-solid fa-list-ol text-indigo-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-white">1. Añadir Recompensas</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Ingresa la palabra deseada junto con el porcentaje exacto que le corresponde. Asegúrate de elegir una rareza visual acorde para que el card en el rodillo tenga su propio brillo característico de gachapon.
+                    </p>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="bg-indigo-950/30 p-3 rounded-2xl w-12 h-12 flex items-center justify-center border border-indigo-900/40">
+                        <i class="fa-solid fa-balance-scale text-indigo-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-white">2. Control de Probabilidad</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Para un funcionamiento perfecto, los porcentajes deben sumar **100%**. Si tienes porcentajes desiguales, no te preocupes, puedes pulsar el botón **Auto-Ajustar a 100%** para normalizar los valores conservando las proporciones.
+                    </p>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="bg-indigo-950/30 p-3 rounded-2xl w-12 h-12 flex items-center justify-center border border-indigo-900/40">
+                        <i class="fa-solid fa-gauge-high text-indigo-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-white">3. Animación CS2 Auténtica</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Al presionar "Tirar Gachapon", el simulador calcula de forma aleatoria la recompensa ponderada *antes* de rodar. Luego, genera una cinta de cartas que gira acelerando hasta frenarse lentamente en la casilla ganadora exacta.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <span class="text-xs text-slate-500">Desarrollado con motor de audio web estéreo para simular "ticks" de rodillo real.</span>
+                <span class="text-xs text-indigo-400 font-bold bg-indigo-950/30 border border-indigo-900/40 px-3 py-1.5 rounded-lg">RulePorcentaje v2.0 - Gaming Edition</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- VENTANA EMERGENTE (MODAL DE RECOMPENSA CS2) -->
+    <div id="winner-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl hidden transition-all duration-300">
+        <div class="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl transition-all transform scale-90 opacity-0" id="winner-modal-content">
+            
+            <!-- Cabecera de Brillo del Modal -->
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-red-500"></div>
+            
+            <!-- Botón de Cerrar (X) -->
+            <button onclick="closeWinnerModal()" class="absolute top-4 right-4 w-10 h-10 bg-slate-950/80 hover:bg-slate-800 text-gray-400 hover:text-white rounded-full flex items-center justify-center transition-all z-10 border border-slate-800">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Contenedor de Contenido del Premio -->
+            <div class="p-8 text-center flex flex-col items-center">
+                
+                <!-- Efecto de Halo de Luz -->
+                <div class="relative w-full py-8 flex justify-center items-center">
+                    <div id="modal-halo" class="absolute w-60 h-60 rounded-full blur-3xl opacity-30 mix-blend-screen animate-pulse"></div>
+                    
+                    <!-- Tarjeta de Premio Principal -->
+                    <div id="modal-prize-card" class="relative z-10 p-6 rounded-2xl border-2 flex flex-col items-center justify-center w-52 h-52 bg-slate-950/60 shadow-xl">
+                        <i id="modal-prize-icon" class="fa-solid fa-gift text-5xl mb-3 text-slate-400"></i>
+                        <span id="modal-prize-tier" class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md mb-2 bg-slate-900">COMMON</span>
+                        <h3 id="modal-prize-word" class="font-display font-black text-2xl text-white tracking-tight break-all max-w-[180px]">Recompensa</h3>
+                    </div>
+                </div>
+
+                <!-- Detalle Estadístico -->
+                <div class="bg-slate-950/50 border border-slate-800 p-4 rounded-2xl w-full mb-6 text-center">
+                    <p class="text-xs text-gray-400">Tuviste una probabilidad teórica de:</p>
+                    <p id="modal-prize-probability" class="text-lg font-black font-display text-indigo-400 mt-1">0.00%</p>
+                </div>
+
+                <!-- Botón de Aceptar / Reclamar -->
+                <button onclick="closeWinnerModal()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3.5 rounded-xl transition-all uppercase tracking-wider text-sm shadow-lg shadow-indigo-600/20">
+                    Aceptar y Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOTOR DE LOGICA Y AUDIO DE LA RULETA -->
+    <script>
+        // --- BASE DE DATOS LOCAL Y PRESETS DE EJEMPLO ---
+        let items = [
+            { id: 1, word: "AWP | Dragon Lore", percent: 0.26, rarity: "ancient" },
+            { id: 2, word: "M4A4 | Howl", percent: 0.64, rarity: "legendary" },
+            { id: 3, word: "AK-47 | Redline", percent: 3.20, rarity: "mythical" },
+            { id: 4, word: "Desert Eagle | Mecha", percent: 15.98, rarity: "classified" },
+            { id: 5, word: "P250 | Sand Dune", percent: 79.92, rarity: "common" }
+        ];
+
+        let isSpinning = false;
+        let isSoundEnabled = true;
+        let pullHistory = [];
+        
+        // Colores y Diseños por Categoría de Rareza
+        const rarityConfigs = {
+            common: {
+                bg: "bg-slate-800",
+                border: "border-slate-700",
+                text: "text-slate-400",
+                glow: "shadow-[0_0_15px_rgba(100,116,139,0.3)]",
+                label: "Mil-Spec"
+            },
+            restricted: {
+                bg: "bg-blue-950",
+                border: "border-blue-800",
+                text: "text-blue-400",
+                glow: "shadow-[0_0_15px_rgba(59,130,246,0.3)]",
+                label: "Restricted"
+            },
+            classified: {
+                bg: "bg-indigo-950",
+                border: "border-indigo-800",
+                text: "text-indigo-400",
+                glow: "shadow-[0_0_15px_rgba(99,102,241,0.3)]",
+                label: "Classified"
+            },
+            mythical: {
+                bg: "bg-pink-950",
+                border: "border-pink-800",
+                text: "text-pink-400",
+                glow: "shadow-[0_0_15px_rgba(236,72,153,0.3)]",
+                label: "Covert"
+            },
+            legendary: {
+                bg: "bg-amber-950/80",
+                border: "border-amber-700",
+                text: "text-amber-400",
+                glow: "shadow-[0_0_20px_rgba(245,158,11,0.5)]",
+                label: "Special ★"
+            },
+            ancient: {
+                bg: "bg-red-950/80",
+                border: "border-red-700",
+                text: "text-red-500",
+                glow: "shadow-[0_0_25px_rgba(239,68,68,0.6)]",
+                label: "Contraband ★"
+            }
+        };
+
+        // --- SISTEMA DE AUDIO DIGITAL SINTETIZADO ---
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Sonido de Click de Ruleta CS2
+        function playTickSound() {
+            if (!isSoundEnabled) return;
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'triangle';
+                // Frecuencia descendente rápida típica de click mecánico
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.04);
+                
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            } catch (e) {
+                console.warn("Fallo en la síntesis de audio:", e);
+            }
+        }
+
+        // Sonido Triunfal al Detenerse
+        function playWinSound() {
+            if (!isSoundEnabled) return;
+            try {
+                initAudio();
+                const notes = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5 (Acorde mayor)
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + (idx * 0.1));
+                    
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime + (idx * 0.1));
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + (idx * 0.1) + 0.6);
+                    
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    osc.start(audioCtx.currentTime + (idx * 0.1));
+                    osc.stop(audioCtx.currentTime + (idx * 0.1) + 0.6);
+                });
+            } catch (e) {
+                console.warn("Fallo en sonido triunfal:", e);
+            }
+        }
+
+        function toggleSound() {
+            isSoundEnabled = !isSoundEnabled;
+            const icon = document.getElementById('sound-icon');
+            const text = document.getElementById('sound-text');
+            if (isSoundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-indigo-400";
+                text.innerText = "Audio FX: Activo";
+            } else {
+                icon.className = "fa-solid fa-volume-mute text-gray-500";
+                text.innerText = "Audio FX: Silenciado";
+            }
+        }
+
+        // --- INICIALIZACIÓN ---
+        window.onload = function() {
+            renderWordsList();
+            renderCarouselStripPlaceholder();
+            updateStatisticsDisplay();
+        };
+
+        // --- LÓGICA DE ACTUALIZACIÓN DE UI ---
+        function renderWordsList() {
+            const container = document.getElementById('words-list-container');
+            container.innerHTML = "";
+
+            let totalPercent = 0;
+            items.forEach((item, index) => {
+                totalPercent += item.percent;
+                const config = rarityConfigs[item.rarity];
+                
+                const div = document.createElement('div');
+                div.className = `flex justify-between items-center p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/30 transition-all`;
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full ${config.bg} border ${config.border} shadow-[0_0_10px_rgba(99,102,241,0.2)]"></span>
+                        <div>
+                            <span class="text-sm font-bold text-gray-200">${item.word}</span>
+                            <span class="block text-[10px] uppercase font-bold text-gray-500">${config.label}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm font-mono font-black ${config.text}">${item.percent.toFixed(2)}%</span>
+                        <button onclick="deleteWord(${item.id})" class="text-gray-500 hover:text-red-400 transition-colors p-1">
+                            <i class="fa-solid fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            // Actualizar el total de porcentaje de forma visual
+            const probTotalText = document.getElementById('prob-total-text');
+            const probTotalBar = document.getElementById('prob-total-bar');
+            const normalizeContainer = document.getElementById('normalize-container');
+
+            probTotalText.innerText = `${totalPercent.toFixed(2)}%`;
+            probTotalBar.style.width = `${Math.min(totalPercent, 100)}%`;
+
+            if (totalPercent !== 100) {
+                probTotalText.className = "font-display font-bold text-amber-500";
+                normalizeContainer.classList.remove('hidden');
+            } else {
+                probTotalText.className = "font-display font-bold text-emerald-400";
+                normalizeContainer.classList.add('hidden');
+            }
+        }
+
+        function renderCarouselStripPlaceholder() {
+            const strip = document.getElementById('carousel-strip');
+            strip.innerHTML = "";
+            strip.className = "absolute flex items-center left-0 h-full";
+            strip.style.transform = `translateX(0px)`;
+            
+            // Generar 10 cartas estáticas preliminares
+            for (let i = 0; i < 10; i++) {
+                const item = items[i % items.length] || { word: "Añade Premios", rarity: "common" };
+                const config = rarityConfigs[item.rarity];
+                const card = createCardMarkup(item, config);
+                strip.appendChild(card);
+            }
+        }
+
+        function createCardMarkup(item, config) {
+            const div = document.createElement('div');
+            div.className = `carousel-card flex-shrink-0 w-32 h-28 mx-1 bg-slate-950/80 border ${config.border} rounded-xl overflow-hidden flex flex-col justify-between p-2.5 relative ${config.glow} select-none`;
+            
+            div.innerHTML = `
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.rarity === 'common' ? 'from-slate-600 to-slate-400' : 'from-indigo-600 to-red-600'} opacity-30"></div>
+                <div class="flex justify-between items-start">
+                    <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded ${config.bg} ${config.text}">
+                        ${config.label}
+                    </span>
+                    <span class="text-[9px] font-mono text-gray-500">${item.percent}%</span>
+                </div>
+                <div class="my-auto text-center">
+                    <p class="text-xs font-extrabold text-white truncate max-w-[108px] block mx-auto">${item.word}</p>
+                </div>
+                <div class="w-full h-1.5 rounded-full ${config.bg} opacity-80"></div>
+            `;
+            return div;
+        }
+
+        // --- SISTEMA DE GESTIÓN DE PALABRAS ---
+        function addWord() {
+            const wordInput = document.getElementById('input-word');
+            const percentInput = document.getElementById('input-percent');
+            const rarityInput = document.getElementById('input-rarity');
+
+            const word = wordInput.value.trim();
+            const percent = parseFloat(percentInput.value);
+            const rarity = rarityInput.value;
+
+            if (!word) {
+                showToast("Por favor ingresa una palabra válida.");
+                return;
+            }
+            if (isNaN(percent) || percent <= 0) {
+                showToast("Ingresa un porcentaje de probabilidad válido (mayor que 0).");
+                return;
+            }
+
+            const currentTotal = items.reduce((acc, curr) => acc + curr.percent, 0);
+            if (currentTotal + percent > 100.01) {
+                showToast("La suma total no puede exceder el 100%. Usa el auto-ajustar si tienes problemas.");
+                // Dejamos que el usuario lo agregue si es un ajuste cercano
+            }
+
+            const newItem = {
+                id: Date.now(),
+                word: word,
+                percent: percent,
+                rarity: rarity
+            };
+
+            items.push(newItem);
+            wordInput.value = "";
+            percentInput.value = "";
+            
+            renderWordsList();
+            renderCarouselStripPlaceholder();
+            showToast(`¡"${word}" añadida con éxito!`);
+        }
+
+        function deleteWord(id) {
+            if (items.length <= 1) {
+                showToast("Debes dejar al menos una palabra para que la ruleta funcione.");
+                return;
+            }
+            items = items.filter(item => item.id !== id);
+            renderWordsList();
+            renderCarouselStripPlaceholder();
+        }
+
+        function normalizePercentages() {
+            const sum = items.reduce((acc, curr) => acc + curr.percent, 0);
+            if (sum === 0) return;
+
+            items = items.map(item => ({
+                ...item,
+                percent: parseFloat(((item.percent / sum) * 100).toFixed(4))
+            }));
+
+            // Pequeña corrección final para asegurar un total de 100.00 exacto
+            const newSum = items.reduce((acc, curr) => acc + curr.percent, 0);
+            if (newSum !== 100) {
+                const diff = 100 - newSum;
+                items[0].percent = parseFloat((items[0].percent + diff).toFixed(4));
+            }
+
+            renderWordsList();
+            renderCarouselStripPlaceholder();
+            showToast("Porcentajes auto-ajustados equitativamente al 100%.");
+        }
+
+        // --- CARGAR PRESETS / PLANTILLAS RECOMENDADAS ---
+        function loadPreset(type) {
+            if (type === 'csgo') {
+                items = [
+                    { id: 1, word: "★ Cuchillo Karambit", percent: 0.26, rarity: "ancient" },
+                    { id: 2, word: "AK-47 | Emperatriz", percent: 0.64, rarity: "legendary" },
+                    { id: 3, word: "M4A4 | Neo-Noir", percent: 3.20, rarity: "mythical" },
+                    { id: 4, word: "USP-S | Cyrex", percent: 15.98, rarity: "classified" },
+                    { id: 5, word: "Glock-18 | Off World", percent: 79.92, rarity: "common" }
+                ];
+                showToast("Cargada plantilla Oficial CS2/CSGO.");
+            } else if (type === 'gacha') {
+                items = [
+                    { id: 1, word: "Personaje SSR Fuego (Hero)", percent: 1.50, rarity: "ancient" },
+                    { id: 2, word: "Arma SSR (Espada Real)", percent: 3.50, rarity: "legendary" },
+                    { id: 3, word: "Personaje SR (Ayudante)", percent: 15.00, rarity: "mythical" },
+                    { id: 4, word: "Gema de Invocación", percent: 30.00, rarity: "classified" },
+                    { id: 5, word: "Poción de Experiencia", percent: 50.00, rarity: "common" }
+                ];
+                showToast("Cargada plantilla RPG Gacha F2P.");
+            } else if (type === 'coinflip') {
+                items = [
+                    { id: 1, word: "Cara", percent: 50.00, rarity: "classified" },
+                    { id: 2, word: "Cruz", percent: 50.00, rarity: "mythical" }
+                ];
+                showToast("Cargada plantilla Lanzamiento 50/50.");
+            } else if (type === 'rainbow') {
+                items = [
+                    { id: 1, word: "Comer Pizza", percent: 25.00, rarity: "ancient" },
+                    { id: 2, word: "Comer Hamburguesa", percent: 25.00, rarity: "legendary" },
+                    { id: 3, word: "Comer Ensalada", percent: 25.00, rarity: "mythical" },
+                    { id: 4, word: "Comer Tacos", percent: 25.00, rarity: "common" }
+                ];
+                showToast("Cargado preset de decisión justa (4 elementos).");
+            }
+            renderWordsList();
+            renderCarouselStripPlaceholder();
+        }
+
+        // --- SISTEMA DE SELECCIÓN ALEATORIA DE PRECISIÓN ---
+        function getWeightedRandomItem() {
+            const sum = items.reduce((acc, curr) => acc + curr.percent, 0);
+            let r = Math.random() * sum;
+            
+            for (let i = 0; i < items.length; i++) {
+                if (r < items[i].percent) {
+                    return items[i];
+                }
+                r -= items[i].percent;
+            }
+            return items[items.length - 1]; // Fallback por decimales
+        }
+
+        // --- EL SIMULADOR DE CAJA DE CS2 ---
+        function spinGachapon() {
+            if (isSpinning) return;
+            isSpinning = true;
+            disableButtons(true);
+            
+            const carouselStrip = document.getElementById('carousel-strip');
+            
+            // Elegimos el elemento ganador basado enteramente en la probabilidad real
+            const winner = getWeightedRandomItem();
+            
+            // Construimos la lista extendida de cards para simular el desplazamiento masivo
+            const totalCardsCount = 60; // Número de cajas a mostrar en la tira
+            const winningIndex = 50;   // Índice exacto de la caja sobre la que frenaremos (cerca del final)
+
+            carouselStrip.innerHTML = "";
+            // Eliminamos la transición para resetear inmediatamente el carrete a la posición inicial
+            carouselStrip.classList.remove('cs2-transition');
+            carouselStrip.style.transform = `translateX(0px)`;
+            
+            // Forzar reflow del DOM
+            void carouselStrip.offsetHeight;
+
+            // Rellenar la tira con elementos aleatorios según el peso de probabilidad
+            const tempCards = [];
+            for (let i = 0; i < totalCardsCount; i++) {
+                let currentItem;
+                if (i === winningIndex) {
+                    currentItem = winner; // Forzamos que el índice ganador sea la palabra elegida por la probabilidad
+                } else {
+                    currentItem = getWeightedRandomItem();
+                }
+                const config = rarityConfigs[currentItem.rarity];
+                const cardNode = createCardMarkup(currentItem, config);
+                carouselStrip.appendChild(cardNode);
+            }
+
+            // Cálculo físico del desplazamiento:
+            // Cada card tiene un ancho de 128px + 8px de margen (mx-1 hace que tenga 4px a cada lado = 8px) => total w-32 + margin = 136px
+            const cardWidth = 136; 
+            const containerWidth = carouselStrip.parentElement.clientWidth;
+            
+            // Calculamos la posición exacta para centrar la tarjeta ganadora
+            // Para centrarla bajo el cursor, la distancia recorrida debe ser:
+            // (índice_ganador * cardWidth) + (medio de cardWidth para que apunte al centro del card) - (medio de containerWidth para alinear con el cursor central)
+            const targetCenterOffset = (winningIndex * cardWidth) + (cardWidth / 2) - (containerWidth / 2);
+            
+            // Añadir una desviación aleatoria orgánica dentro de la tarjeta para simular CS2 real
+            const microOffset = (Math.random() - 0.5) * (cardWidth * 0.7);
+            const finalTranslateX = -(targetCenterOffset + microOffset);
+
+            // Re-aplicar la transición de frenado de CS2 (5.5 segundos)
+            carouselStrip.classList.add('cs2-transition');
+            
+            // Iniciamos la animación
+            setTimeout(() => {
+                carouselStrip.style.transform = `translateX(${finalTranslateX}px)`;
+                
+                // Empezar a trackear los clicks / ticks mecánicos en tiempo real mientras rueda
+                let lastTickIndex = -1;
+                const pointer = document.getElementById('carousel-pointer');
+                
+                function trackGachaTicks() {
+                    if (!isSpinning) return;
+                    
+                    const pointerRect = pointer.getBoundingClientRect();
+                    const pointerCenter = pointerRect.left + pointerRect.width / 2;
+                    
+                    const cards = carouselStrip.querySelectorAll('.carousel-card');
+                    let activeCardIdx = -1;
+                    
+                    cards.forEach((card, idx) => {
+                        const rect = card.getBoundingClientRect();
+                        if (pointerCenter >= rect.left && pointerCenter <= rect.right) {
+                            activeCardIdx = idx;
+                        }
+                    });
+
+                    if (activeCardIdx !== -1 && activeCardIdx !== lastTickIndex) {
+                        playTickSound();
+                        lastTickIndex = activeCardIdx;
+                    }
+
+                    requestAnimationFrame(trackGachaTicks);
+                }
+
+                // Iniciar motor de tracking de audio de rodillo
+                requestAnimationFrame(trackGachaTicks);
+            }, 50);
+
+            // Una vez que el temporizador de la física de CS2 termina (5.5s)
+            setTimeout(() => {
+                isSpinning = false;
+                disableButtons(false);
+                
+                // Guardar racha
+                pullHistory.push(winner);
+                updateStatisticsDisplay();
+
+                // Mostrar el Modal de Ganador con animación
+                openWinnerModal(winner);
+                playWinSound();
+            }, 5600);
+        }
+
+        // --- APERTURAS MASIVAS (TIRADAS RÁPIDAS X10 / X100) ---
+        function bulkSpin(count) {
+            if (isSpinning) return;
+            
+            showToast(`Simulando la apertura rápida de ${count} gachapones...`);
+            
+            // Simulamos matemáticamente de forma inmediata
+            let winners = [];
+            for (let i = 0; i < count; i++) {
+                winners.push(getWeightedRandomItem());
+            }
+
+            // Agregamos todo al historial de sesión
+            pullHistory = pullHistory.concat(winners);
+            updateStatisticsDisplay();
+
+            // Mostramos un resumen del mejor premio obtenido en esta racha masiva
+            // Ordenamos por rareza para encontrar el más valioso de la tirada
+            const rarityValues = { common: 1, restricted: 2, classified: 3, mythical: 4, legendary: 5, ancient: 6 };
+            winners.sort((a, b) => rarityValues[b.rarity] - rarityValues[a.rarity]);
+            
+            // El mejor de la racha rápida:
+            const bestWinner = winners[0];
+            
+            // Animación rápida y directa al modal para no aburrir
+            openWinnerModal(bestWinner, `¡Apertura Rápida de ${count} Cajas completada! El mejor premio obtenido fue:`);
+        }
+
+        // --- SISTEMA DE ESTADÍSTICAS EN TIEMPO REAL ---
+        function updateStatisticsDisplay() {
+            const count = pullHistory.length;
+            document.getElementById('case-counter').innerText = `Historial: ${count} Tiradas`;
+            document.getElementById('stat-total-pulls').innerText = count;
+
+            // Contar tipos de rarezas
+            const legendaryCount = pullHistory.filter(item => item.rarity === 'legendary').length;
+            const ancientCount = pullHistory.filter(item => item.rarity === 'ancient').length;
+
+            document.getElementById('stat-legendary-count').innerText = legendaryCount;
+            document.getElementById('stat-ancient-count').innerText = ancientCount;
+
+            // Calcular porcentajes empíricos obtenidos de cada palabra
+            const statsContainer = document.getElementById('stats-freq-container');
+            if (count === 0) {
+                statsContainer.innerHTML = `<p class="text-xs text-gray-400 text-center py-2">No hay estadísticas registradas todavía. ¡Haz tu primera tirada!</p>`;
+                return;
+            }
+
+            // Agrupar apariciones de cada palabra
+            const freqMap = {};
+            items.forEach(item => {
+                freqMap[item.word] = {
+                    config: item,
+                    count: 0
+                };
+            });
+
+            pullHistory.forEach(drawn => {
+                if (freqMap[drawn.word]) {
+                    freqMap[drawn.word].count++;
+                } else {
+                    // Si el elemento fue eliminado de la lista pero sigue en el historial
+                    freqMap[drawn.word] = {
+                        config: { word: drawn.word, percent: drawn.percent, rarity: drawn.rarity },
+                        count: 1
+                    };
+                }
+            });
+
+            statsContainer.innerHTML = "";
+            
+            // Mostrar lista ordenada de rendimiento
+            Object.values(freqMap).sort((a, b) => b.count - a.count).forEach(data => {
+                const item = data.config;
+                const occurrences = data.count;
+                const realPercent = ((occurrences / count) * 100).toFixed(2);
+                const config = rarityConfigs[item.rarity] || rarityConfigs.common;
+
+                const progressBg = item.rarity === 'ancient' ? 'bg-red-500' :
+                                   item.rarity === 'legendary' ? 'bg-amber-400' : 'bg-indigo-500';
+
+                const div = document.createElement('div');
+                div.className = "space-y-1";
+                div.innerHTML = `
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-bold text-gray-300 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full ${config.bg}"></span>
+                            ${item.word} 
+                            <span class="text-[10px] text-gray-500">(${occurrences} veces)</span>
+                        </span>
+                        <div class="space-x-2 text-right">
+                            <span class="font-bold text-gray-400 text-[10px]">Pág. Teórica: ${item.percent}%</span>
+                            <span class="font-mono font-black ${config.text} bg-slate-950 px-1.5 py-0.5 rounded text-[10px]">Real: ${realPercent}%</span>
+                        </div>
+                    </div>
+                    <div class="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
+                        <div class="${progressBg} h-full transition-all duration-300" style="width: ${realPercent}%"></div>
+                    </div>
+                `;
+                statsContainer.appendChild(div);
+            });
+        }
+
+        function resetStats() {
+            pullHistory = [];
+            updateStatisticsDisplay();
+            showToast("Estadísticas de sesión reseteadas.");
+        }
+
+        // --- SISTEMA DE DIALOGOS Y TOASTS ---
+        function showToast(message) {
+            // Un toast integrado flotante minimalista
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-5 right-5 z-50 bg-slate-900 border border-slate-800 text-slate-200 text-xs font-bold px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 animate-bounce";
+            toast.innerHTML = `<i class="fa-solid fa-bell text-indigo-400"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'transition-all', 'duration-500');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        // --- GESTIÓN DE MODALES CS2 ---
+        function openWinnerModal(winner, customHeader = null) {
+            const modal = document.getElementById('winner-modal');
+            const content = document.getElementById('winner-modal-content');
+            
+            const prizeWord = document.getElementById('modal-prize-word');
+            const prizeProbability = document.getElementById('modal-prize-probability');
+            const prizeTier = document.getElementById('modal-prize-tier');
+            const prizeIcon = document.getElementById('modal-prize-icon');
+            const prizeCard = document.getElementById('modal-prize-card');
+            const halo = document.getElementById('modal-halo');
+
+            const config = rarityConfigs[winner.rarity];
+
+            // Rellenar información del premio en el modal
+            prizeWord.innerText = winner.word;
+            prizeProbability.innerText = `${winner.percent.toFixed(4)}% de Probabilidad Real`;
+            prizeTier.innerText = config.label;
+            
+            // Asignar colores de acuerdo a la rareza
+            prizeTier.className = `text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md mb-2 ${config.bg} ${config.text}`;
+            prizeIcon.className = `fa-solid ${winner.rarity === 'ancient' || winner.rarity === 'legendary' ? 'fa-crown animate-pulse' : 'fa-gift'} text-5xl mb-3 ${config.text}`;
+            
+            // Cambiar bordes y sombras del Card del Modal
+            prizeCard.className = `relative z-10 p-6 rounded-2xl border-2 ${config.border} flex flex-col items-center justify-center w-52 h-52 bg-slate-950/90 ${config.glow} scale-105 transition-all`;
+            
+            // Halo de brillo gigante de fondo
+            halo.className = `absolute w-72 h-72 rounded-full blur-3xl opacity-40 mix-blend-screen animate-pulse ${winner.rarity === 'ancient' ? 'bg-red-500' : winner.rarity === 'legendary' ? 'bg-amber-500' : 'bg-indigo-500'}`;
+
+            // Mostrar el modal
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-90', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 50);
+        }
+
+        function closeWinnerModal() {
+            const modal = document.getElementById('winner-modal');
+            const content = document.getElementById('winner-modal-content');
+
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-90', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                // Al cerrar el modal, restauramos el rodillo a su vista placeholder para el siguiente tiro
+                renderCarouselStripPlaceholder();
+            }, 300);
+        }
+
+        function disableButtons(disable) {
+            document.getElementById('spin-btn').disabled = disable;
+            document.getElementById('bulk-10-btn').disabled = disable;
+            document.getElementById('bulk-100-btn').disabled = disable;
+        }
+    </script>
+</body>
+</html>
